@@ -1,7 +1,10 @@
 import React from 'react';
+import {connect} from 'react-redux'
+import {addItem, removeItem} from './actions/items'
+
 
 class TodoList extends React.Component {
-  state = {items: [], name: ''}
+  state = {name: ''}
 
   handleChange = (e) => {
     const {name, value} = e.target;
@@ -10,15 +13,20 @@ class TodoList extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const {items, name} = this.state;
+    const {name} = this.state;
+    this.props.dispatch(addItem(name))
     this.setState({
-      items: [name, ...items],
       name: ''
     })
   }
 
+  deleteItem = (index) => {
+    this.props.dispatch(removeItem(index))
+  }
+
   render() {
-    const {items, name} = this.state;
+    const {name} = this.state;
+    const {items} = this.props
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -33,12 +41,24 @@ class TodoList extends React.Component {
         <hr />
         <ul>
           {items.map((item, i) =>
-            <li key={i}>{item}</li>
+            <li key={i}>
+              {item}
+              {' '}
+              <span
+                style={{color: 'red'}}
+                onClick={() => this.deleteItem(i)}
+              >
+                X
+            </span>
+            </li>
           )}
         </ul>
       </div>
     )
   }
 }
+const mapStateToProps = (state) => {
+  return {items: state.items}
+}
 
-export default TodoList;
+export default connect(mapStateToProps)(TodoList);
