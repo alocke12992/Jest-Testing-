@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {addItem, removeItem} from './actions/items'
 
 
-class TodoList extends React.Component {
+export class TodoList extends React.Component {
   state = {name: ''}
 
   handleChange = (e) => {
